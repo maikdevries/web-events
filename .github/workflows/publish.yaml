@@ -9,7 +9,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      id-token: write # The OIDC ID token is used for authentication with JSR.
+      id-token: write
     steps:
       - uses: actions/checkout@v7
-      - run: npx jsr publish
+
+      - uses: denoland/setup-deno@v2
+        with:
+          cache: true
+          deno-version: latest
+
+      - run: deno publish
