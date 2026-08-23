@@ -1,6 +1,6 @@
 // [SPEC] https://raw.githubusercontent.com/denoland/deno/refs/heads/main/cli/schemas/config-file.v1.json
 {
-	"name": "@maikdevries/server-events",
+	"name": "@disconnected/web-events",
 	"version": "0.2.0",
 	"exports": {
 		".": "./mod.ts",
