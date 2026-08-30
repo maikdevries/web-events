@@ -2,4 +2,4 @@
  * @module core
  */
 
-export { type Event, Stream } from './stream.ts';
+export { Emitter, type Event } from './emitter.ts';
