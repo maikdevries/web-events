@@ -4,6 +4,7 @@ interface Event {
 }
 
 export class Listener {
+	#status: 'IDLE' | 'CONNECTING' | 'OPEN' | 'CLOSED' = 'IDLE';
 	#stream: ReadableStream<string> | null = null;
 	#url: URL;
 
@@ -13,11 +14,17 @@ export class Listener {
 		void this.#connect();
 	}
 
+	get status(): 'IDLE' | 'CONNECTING' | 'OPEN' | 'CLOSED' {
+		return this.#status;
+	}
+
 	get url(): URL {
 		return this.#url;
 	}
 
 	async #connect(): Promise<void> {
+		this.#status = 'CONNECTING';
+
 		let response;
 		try {
 			response = await self.fetch(this.#url, {
