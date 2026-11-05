@@ -13,6 +13,10 @@ export class Listener {
 		void this.#connect();
 	}
 
+	get url(): URL {
+		return this.#url;
+	}
+
 	async #connect(): Promise<void> {
 		let response;
 		try {
