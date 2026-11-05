@@ -23,7 +23,8 @@ export class Listener {
 	}
 
 	async #connect(): Promise<void> {
-		this.#status = 'CONNECTING';
+		if (this.status === 'IDLE') this.#status = 'CONNECTING';
+		else return;
 
 		let response;
 		try {
