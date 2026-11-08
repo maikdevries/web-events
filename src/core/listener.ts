@@ -56,7 +56,7 @@ export class Listener {
 		// [TODO] Network error -> re-establish connection
 
 		if (response?.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
-			// [TODO] Response is invalid -> fail connection
+			return this.#fail();
 		}
 
 		this.#stream = response?.body?.pipeThrough(new TextDecoderStream()) ?? null;
