@@ -6,6 +6,7 @@ interface Event {
 type Handler = (event: MessageEvent<Event['data']>) => void;
 
 interface Options {
+	'id': string;
 	'reconnect': number;
 }
 
@@ -20,6 +21,7 @@ export class Listener {
 
 	constructor(url: URL, options: Partial<Options> = {}) {
 		this.#options = {
+			'id': '',
 			'reconnect': 15 * 1000,
 			...options,
 		};
@@ -47,6 +49,7 @@ export class Listener {
 				'cache': 'no-store',
 				'headers': {
 					'Accept': 'text/event-stream',
+					...(this.#options.id ? { 'Last-Event-ID': this.#options.id } : {}),
 				},
 				'redirect': 'follow',
 				'signal': this.#controller.signal,
@@ -133,6 +136,9 @@ export class Listener {
 				case 'data':
 					event.data += value + '\n';
 					break;
+				case 'id':
+					this.#options.id = value;
+					break;
 			}
 		}
 	}
@@ -144,6 +150,7 @@ export class Listener {
 
 		const ev = new MessageEvent(event.type, {
 			'data': event.data,
+			'lastEventId': this.#options.id,
 		});
 
 		return this.#handlers.get(ev.type)?.(ev);
