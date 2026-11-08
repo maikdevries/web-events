@@ -56,7 +56,7 @@ export class Listener {
 		// [TODO] Network error -> re-establish connection
 
 		if (response?.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
-			return this.#fail();
+			return this.close({ 'notify': true });
 		}
 
 		this.#stream = response?.body?.pipeThrough(new TextDecoderStream()) ?? null;
@@ -69,20 +69,15 @@ export class Listener {
 		return this.#consume();
 	}
 
-	#fail(): void | Promise<void> {
+	async close(options: { 'notify': boolean } = { 'notify': false }): Promise<void> {
 		if (this.status === 'CLOSED') return;
 
-		// [FIX] Events without any data are dropped by default
-		this.#emit({ 'type': 'error', 'data': '' });
-
-		return this.close();
-	}
-
-	async close(): Promise<void> {
 		this.#controller.abort();
 		await this.#stream?.cancel();
 
+		// [FIX] Events without any data are dropped by default
 		this.#status = 'CLOSED';
+		if (options.notify) this.#emit({ 'type': 'error', 'data': '' });
 	}
 
 	async #reconnect(): Promise<void> {
