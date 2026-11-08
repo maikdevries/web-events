@@ -33,6 +33,7 @@ export class Listener {
 				'headers': {
 					'Accept': 'text/event-stream',
 				},
+				'redirect': 'follow',
 			});
 		} catch (error: unknown) {
 			// [TODO] Network error -> re-establish connection
