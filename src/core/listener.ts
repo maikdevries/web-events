@@ -3,12 +3,23 @@ interface Event {
 	'type': string;
 }
 
+interface Options {
+	'reconnect': number;
+}
+
 export class Listener {
 	#status: 'IDLE' | 'CONNECTING' | 'OPEN' | 'CLOSED' = 'IDLE';
 	#stream: ReadableStream<string> | null = null;
+
+	#options: Options;
 	#url: URL;
 
-	constructor(url: URL) {
+	constructor(url: URL, options: Partial<Options> = {}) {
+		this.#options = {
+			'reconnect': 15 * 1000,
+			...options,
+		};
+
 		this.#url = url;
 
 		void this.#connect();
