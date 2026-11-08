@@ -55,11 +55,12 @@ export class Listener {
 		// [TODO] Aborted network error -> fail connection
 		// [TODO] Network error -> re-establish connection
 
-		if (response?.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
+		if (response?.status === 204) return this.close();
+		else if (response?.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
 			return this.close({ 'notify': true });
 		}
 
-		this.#stream = response?.body?.pipeThrough(new TextDecoderStream()) ?? null;
+		this.#stream = response.body?.pipeThrough(new TextDecoderStream()) ?? null;
 		if (!this.#stream) return this.#reconnect();
 
 		// [FIX] Events without any data are dropped by default
