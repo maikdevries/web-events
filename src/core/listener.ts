@@ -146,7 +146,7 @@ export class Listener {
 			'data': event.data,
 		});
 
-		// [TODO] Call respective registered event handler
+		return this.#handlers.get(ev.type)?.(ev);
 	}
 
 	register(type: Event['type'], handler: Handler): void {
