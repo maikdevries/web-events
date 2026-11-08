@@ -64,6 +64,17 @@ export class Listener {
 		return this.#consume();
 	}
 
+	async #reconnect(): Promise<void> {
+		if (this.status !== 'CLOSED') this.#status = 'IDLE';
+		else return;
+
+		// [FIX] Events without any data are dropped by default
+		this.#emit({ 'type': 'error', 'data': '' });
+
+		await new Promise((r) => setTimeout(r, this.#options.reconnect));
+		return this.#connect();
+	}
+
 	async #consume(): Promise<void> {
 		if (!this.#stream?.locked) return;
 
