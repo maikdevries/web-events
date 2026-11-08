@@ -105,6 +105,8 @@ export class Listener {
 
 			for (const frame of frames) this.#parse(frame);
 		}
+
+		return this.#reconnect();
 	}
 
 	#parse(frame: string): void {
