@@ -154,6 +154,7 @@ export class Listener {
 		const ev = new MessageEvent(event.type, {
 			'data': event.data,
 			'lastEventId': this.#options.id,
+			'origin': this.url.origin,
 		});
 
 		return this.#handlers.get(ev.type)?.(ev);
