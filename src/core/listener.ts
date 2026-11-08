@@ -54,6 +54,7 @@ export class Listener {
 					'Accept': 'text/event-stream',
 					...(this.#options.id ? { 'Last-Event-ID': this.#options.id } : {}),
 				},
+				'mode': 'cors',
 				'redirect': 'follow',
 				'signal': this.#controller.signal,
 			});
