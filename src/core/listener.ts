@@ -58,7 +58,7 @@ export class Listener {
 		}
 
 		this.#stream = response?.body?.pipeThrough(new TextDecoderStream()) ?? null;
-		// [TODO] Response has no body -> re-establish connection
+		if (!this.#stream) return this.#reconnect();
 
 		// [TODO] Response is valid -> announce connection
 		return this.#consume();
