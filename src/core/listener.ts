@@ -6,6 +6,7 @@ interface Event {
 type Handler = (event: MessageEvent<Event['data']>) => void;
 
 interface Options {
+	'credentials': boolean;
 	'id': string;
 	'reconnect': number;
 }
@@ -21,6 +22,7 @@ export class Listener {
 
 	constructor(url: URL, options: Partial<Options> = {}) {
 		this.#options = {
+			'credentials': false,
 			'id': '',
 			'reconnect': 15 * 1000,
 			...options,
@@ -47,6 +49,7 @@ export class Listener {
 		try {
 			response = await self.fetch(this.#url, {
 				'cache': 'no-store',
+				'credentials': this.#options.credentials ? 'include' : 'same-origin',
 				'headers': {
 					'Accept': 'text/event-stream',
 					...(this.#options.id ? { 'Last-Event-ID': this.#options.id } : {}),
