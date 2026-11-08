@@ -62,7 +62,10 @@ export class Listener {
 		this.#stream = response?.body?.pipeThrough(new TextDecoderStream()) ?? null;
 		if (!this.#stream) return this.#reconnect();
 
-		// [TODO] Response is valid -> announce connection
+		// [FIX] Events without any data are dropped by default
+		this.#status = 'OPEN';
+		this.#emit({ 'type': 'open', 'data': '' });
+
 		return this.#consume();
 	}
 
