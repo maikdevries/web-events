@@ -3,12 +3,15 @@ interface Event {
 	'type': string;
 }
 
+type Handler = (event: MessageEvent<Event['data']>) => void;
+
 interface Options {
 	'reconnect': number;
 }
 
 export class Listener {
 	#controller: AbortController = new AbortController();
+	#handlers: Map<Event['type'], Handler> = new Map();
 	#status: 'IDLE' | 'CONNECTING' | 'OPEN' | 'CLOSED' = 'IDLE';
 	#stream: ReadableStream<string> | null = null;
 
@@ -144,5 +147,9 @@ export class Listener {
 		});
 
 		// [TODO] Call respective registered event handler
+	}
+
+	register(type: Event['type'], handler: Handler): void {
+		this.#handlers.set(type, handler);
 	}
 }
