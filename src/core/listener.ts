@@ -66,6 +66,22 @@ export class Listener {
 		return this.#consume();
 	}
 
+	#fail(): void | Promise<void> {
+		if (this.status === 'CLOSED') return;
+
+		// [FIX] Events without any data are dropped by default
+		this.#emit({ 'type': 'error', 'data': '' });
+
+		return this.close();
+	}
+
+	async close(): Promise<void> {
+		this.#controller.abort();
+		await this.#stream?.cancel();
+
+		this.#status = 'CLOSED';
+	}
+
 	async #reconnect(): Promise<void> {
 		if (this.status !== 'CLOSED') this.#status = 'IDLE';
 		else return;
