@@ -8,6 +8,7 @@ interface Options {
 }
 
 export class Listener {
+	#controller: AbortController = new AbortController();
 	#status: 'IDLE' | 'CONNECTING' | 'OPEN' | 'CLOSED' = 'IDLE';
 	#stream: ReadableStream<string> | null = null;
 
@@ -44,6 +45,7 @@ export class Listener {
 				'headers': {
 					'Accept': 'text/event-stream',
 				},
+				'signal': this.#controller.signal,
 				'redirect': 'follow',
 			});
 		} catch (error: unknown) {
