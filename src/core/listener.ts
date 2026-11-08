@@ -45,8 +45,8 @@ export class Listener {
 				'headers': {
 					'Accept': 'text/event-stream',
 				},
-				'signal': this.#controller.signal,
 				'redirect': 'follow',
+				'signal': this.#controller.signal,
 			});
 		} catch (error: unknown) {
 			// [TODO] Network error -> re-establish connection
