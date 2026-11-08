@@ -139,6 +139,9 @@ export class Listener {
 				case 'id':
 					this.#options.id = value;
 					break;
+				case 'retry':
+					if (/^[0-9]+$/.test(value)) this.#options.reconnect = Number(value);
+					break;
 			}
 		}
 	}
