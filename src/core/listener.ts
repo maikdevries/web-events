@@ -49,14 +49,15 @@ export class Listener {
 				'signal': this.#controller.signal,
 			});
 		} catch (error: unknown) {
-			// [TODO] Network error -> re-establish connection
+			if (error instanceof DOMException && error.name === 'AbortError') return this.close();
+			else return this.#reconnect();
 		}
 
 		// [TODO] Aborted network error -> fail connection
 		// [TODO] Network error -> re-establish connection
 
-		if (response?.status === 204) return this.close();
-		else if (response?.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
+		if (response.status === 204) return this.close();
+		else if (response.status !== 200 || response.headers.get('Content-Type') !== 'text/event-stream') {
 			return this.close({ 'notify': true });
 		}
 
