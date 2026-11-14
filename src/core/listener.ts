@@ -76,7 +76,7 @@ export class Listener {
 
 		// [FIX] Events without any data are dropped by default
 		this.#status = 'OPEN';
-		this.#emit({ 'type': 'open', 'data': '' });
+		this.#dispatch({ 'type': 'open', 'data': '' });
 
 		return this.#consume();
 	}
@@ -89,7 +89,7 @@ export class Listener {
 
 		// [FIX] Events without any data are dropped by default
 		this.#status = 'CLOSED';
-		if (options.notify) this.#emit({ 'type': 'error', 'data': '' });
+		if (options.notify) this.#dispatch({ 'type': 'error', 'data': '' });
 	}
 
 	async #reconnect(): Promise<void> {
@@ -97,7 +97,7 @@ export class Listener {
 		else return;
 
 		// [FIX] Events without any data are dropped by default
-		this.#emit({ 'type': 'error', 'data': '' });
+		this.#dispatch({ 'type': 'error', 'data': '' });
 
 		await new Promise((r) => setTimeout(r, this.#options.reconnect));
 		return this.#connect();
@@ -126,7 +126,7 @@ export class Listener {
 		};
 
 		for (const line of frame.split('\n')) {
-			if (!line.length) return this.#emit(event);
+			if (!line.length) return this.#dispatch(event);
 
 			if (line.startsWith(':')) continue;
 
@@ -150,7 +150,7 @@ export class Listener {
 		}
 	}
 
-	#emit(event: Event): void {
+	#dispatch(event: Event): void {
 		if (!event.data.length) return;
 
 		if (event.data.endsWith('\n')) event.data = event.data.slice(0, event.data.length - '\n'.length);
