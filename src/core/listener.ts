@@ -103,15 +103,17 @@ export class Listener {
 	async #consume(): Promise<void> {
 		if (!this.#stream) return;
 
-		let buffer = '';
-		for await (const chunk of this.#stream) {
-			buffer += chunk;
+		try {
+			let buffer = '';
+			for await (const chunk of this.#stream) {
+				buffer += chunk;
 
-			const frames = buffer.split('\n\n');
-			buffer = frames.pop() ?? '';
+				const frames = buffer.split('\n\n');
+				buffer = frames.pop() ?? '';
 
-			for (const frame of frames) this.#parse(frame);
-		}
+				for (const frame of frames) this.#parse(frame);
+			}
+		} catch {}
 
 		return this.#reconnect();
 	}
