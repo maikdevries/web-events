@@ -74,9 +74,8 @@ export class Listener {
 		this.#stream = response.body?.pipeThrough(new TextDecoderStream()) ?? null;
 		if (!this.#stream) return this.#reconnect();
 
-		// [FIX] Events without any data are dropped by default
 		this.#status = 'OPEN';
-		this.#dispatch({ 'type': 'open', 'data': '' });
+		this.#dispatch({ 'type': 'open', 'data': '' }, { 'force': true });
 
 		return this.#consume();
 	}
@@ -87,17 +86,15 @@ export class Listener {
 		this.#controller.abort();
 		await this.#stream?.cancel();
 
-		// [FIX] Events without any data are dropped by default
 		this.#status = 'CLOSED';
-		if (options.notify) this.#dispatch({ 'type': 'error', 'data': '' });
+		if (options.notify) this.#dispatch({ 'type': 'error', 'data': '' }, { 'force': true });
 	}
 
 	async #reconnect(): Promise<void> {
 		if (this.status !== 'CLOSED') this.#status = 'IDLE';
 		else return;
 
-		// [FIX] Events without any data are dropped by default
-		this.#dispatch({ 'type': 'error', 'data': '' });
+		this.#dispatch({ 'type': 'error', 'data': '' }, { 'force': true });
 
 		await new Promise((r) => setTimeout(r, this.#options.reconnect));
 		return this.#connect();
@@ -150,8 +147,8 @@ export class Listener {
 		}
 	}
 
-	#dispatch(event: Event): void {
-		if (!event.data.length) return;
+	#dispatch(event: Event, options: { 'force': boolean } = { 'force': false }): void {
+		if (!event.data.length && !options.force) return;
 
 		if (event.data.endsWith('\n')) event.data = event.data.slice(0, event.data.length - '\n'.length);
 
