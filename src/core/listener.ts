@@ -101,7 +101,7 @@ export class Listener {
 	}
 
 	async #consume(): Promise<void> {
-		if (!this.#stream?.locked) return;
+		if (!this.#stream) return;
 
 		let buffer = '';
 		for await (const chunk of this.#stream) {
