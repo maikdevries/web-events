@@ -11,6 +11,9 @@ interface Options {
 	'reconnect': number;
 }
 
+/**
+ * @experimental
+ */
 export class Listener {
 	#controller: AbortController = new AbortController();
 	#handlers: Map<Event['type'], Handler> = new Map();

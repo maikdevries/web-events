@@ -5,6 +5,9 @@ export interface Event {
 
 type JSON = string | number | boolean | null | JSON[] | { [key: string]: JSON } | { toJSON(): JSON };
 
+/**
+ * @experimental
+ */
 export class Emitter {
 	#controller: ReadableStreamDefaultController<string> | null = null;
 	#heartbeat: number | null = null;
