@@ -123,8 +123,6 @@ export class Listener {
 		};
 
 		for (const line of frame.split('\n')) {
-			if (!line.length) return this.#dispatch(event);
-
 			if (line.startsWith(':')) continue;
 
 			const index = line.includes(':') ? line.indexOf(':') : line.length;
@@ -145,6 +143,8 @@ export class Listener {
 					break;
 			}
 		}
+
+		return this.#dispatch(event);
 	}
 
 	#dispatch(event: Event, options: { 'force': boolean } = { 'force': false }): void {
