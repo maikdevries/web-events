@@ -2,4 +2,4 @@
  * @module
  */
 
-export { Emitter, type Event } from '@self/core';
+export { Emitter, type Event, Listener } from '@self/core';
