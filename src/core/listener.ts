@@ -84,7 +84,7 @@ export class Listener {
 		if (this.status === 'CLOSED') return;
 
 		this.#controller.abort();
-		await this.#stream?.cancel();
+		await this.#stream?.cancel().catch((e) => void e);
 
 		this.#status = 'CLOSED';
 		if (options.notify) this.#dispatch({ 'type': 'error', 'data': '' }, { 'force': true });
