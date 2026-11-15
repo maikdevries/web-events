@@ -18,7 +18,7 @@ export class Emitter {
 
 				this.#write(':');
 			},
-			'cancel': this.close.bind(this, { 'notify': false }),
+			'cancel': () => this.close({ 'notify': false }),
 		}).pipeThrough(new TextEncoderStream());
 	}
 
